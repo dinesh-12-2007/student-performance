@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Performance Prediction</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Global Application Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <span class="logo-icon">🎓</span>
+        <div>
+          <h1 class="project-title">Student Performance Prediction</h1>
+          <p class="project-subtitle">Machine Learning Based Final Grade Prediction (UCI Dataset)</p>
+        </div>
+      </div>
+      <div class="header-badge">
+        <span class="badge-dot"></span> ML Inference API
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-layout">
+    <form id="predictionForm" novalidate>
+      
+      <!-- 1. Subject Model Selection -->
+      <section class="form-card subject-card">
+        <div class="card-header">
+          <span class="step-num">1</span>
+          <div>
+            <h2>Select Subject Model</h2>
+            <p class="section-desc">Choose which specialized trained ML model to run inference with.</p>
+          </div>
+        </div>
+        <div class="subject-toggle-group">
+          <label class="subject-radio-label">
+            <input type="radio" name="subject" value="math" checked id="subMath">
+            <div class="subject-box">
+              <span class="subj-icon">📐</span>
+              <span class="subj-name">Mathematics</span>
+              <span class="subj-desc">Math syllabus model</span>
+            </div>
+          </label>
+          <label class="subject-radio-label">
+            <input type="radio" name="subject" value="portuguese" id="subPort">
+            <div class="subject-box">
+              <span class="subj-icon">📖</span>
+              <span class="subj-name">Portuguese</span>
+              <span class="subj-desc">Language syllabus model</span>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <!-- 2. Personal Information -->
+      <section class="form-card">
+        <div class="card-header">
+          <span class="step-num">2</span>
+          <div>
+            <h2>Personal Information</h2>
+            <p class="section-desc">Demographic and home environment details</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="school">School <span class="req">*</span></label>
+            <select id="school" name="school" required>
+              <option value="GP">Gabriel Pereira (GP)</option>
+              <option value="MS">Mousinho da Silveira (MS)</option>
+            </select>
+            <span class="validation-msg" id="msg-school"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="sex">Sex <span class="req">*</span></label>
+            <select id="sex" name="sex" required>
+              <option value="F">Female (F)</option>
+              <option value="M">Male (M)</option>
+            </select>
+            <span class="validation-msg" id="msg-sex"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="age">Age (years) <span class="req">*</span></label>
+            <input type="number" id="age" name="age" min="15" max="22" value="17" required>
+            <span class="hint-text">Range: 15 - 22</span>
+            <span class="validation-msg" id="msg-age"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Home Address Type <span class="req">*</span></label>
+            <select id="address" name="address" required>
+              <option value="U">Urban (U)</option>
+              <option value="R">Rural (R)</option>
+            </select>
+            <span class="validation-msg" id="msg-address"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="famsize">Family Size <span class="req">*</span></label>
+            <select id="famsize" name="famsize" required>
+              <option value="GT3">Greater than 3 (GT3)</option>
+              <option value="LE3">Less than or equal to 3 (LE3)</option>
+            </select>
+            <span class="validation-msg" id="msg-famsize"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="Pstatus">Parent Cohabitation Status <span class="req">*</span></label>
+            <select id="Pstatus" name="Pstatus" required>
+              <option value="T">Living Together (T)</option>
+              <option value="A">Apart (A)</option>
+            </select>
+            <span class="validation-msg" id="msg-Pstatus"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Parent & Background Information -->
+      <section class="form-card">
+        <div class="card-header">
+          <span class="step-num">3</span>
+          <div>
+            <h2>Parent & Enrollment Background</h2>
+            <p class="section-desc">Parental education levels, employment, and reason for school choice</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="Medu">Mother's Education (Medu) <span class="req">*</span></label>
+            <select id="Medu" name="Medu" required>
+              <option value="0">0 - None</option>
+              <option value="1">1 - Primary (4th grade)</option>
+              <option value="2">2 - 5th to 9th grade</option>
+              <option value="3">3 - Secondary education</option>
+              <option value="4" selected>4 - Higher education</option>
+            </select>
+            <span class="validation-msg" id="msg-Medu"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="Fedu">Father's Education (Fedu) <span class="req">*</span></label>
+            <select id="Fedu" name="Fedu" required>
+              <option value="0">0 - None</option>
+              <option value="1">1 - Primary (4th grade)</option>
+              <option value="2">2 - 5th to 9th grade</option>
+              <option value="3">3 - Secondary education</option>
+              <option value="4" selected>4 - Higher education</option>
+            </select>
+            <span class="validation-msg" id="msg-Fedu"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="Mjob">Mother's Job <span class="req">*</span></label>
+            <select id="Mjob" name="Mjob" required>
+              <option value="other">Other</option>
+              <option value="services">Civil Services</option>
+              <option value="teacher">Teacher</option>
+              <option value="health">Healthcare</option>
+              <option value="at_home">At Home</option>
+            </select>
+            <span class="validation-msg" id="msg-Mjob"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="Fjob">Father's Job <span class="req">*</span></label>
+            <select id="Fjob" name="Fjob" required>
+              <option value="other">Other</option>
+              <option value="services">Civil Services</option>
+              <option value="teacher">Teacher</option>
+              <option value="health">Healthcare</option>
+              <option value="at_home">At Home</option>
+            </select>
+            <span class="validation-msg" id="msg-Fjob"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="reason">Reason to Choose School <span class="req">*</span></label>
+            <select id="reason" name="reason" required>
+              <option value="course">Course Preference</option>
+              <option value="home">Close to Home</option>
+              <option value="reputation">School Reputation</option>
+              <option value="other">Other</option>
+            </select>
+            <span class="validation-msg" id="msg-reason"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="guardian">Guardian <span class="req">*</span></label>
+            <select id="guardian" name="guardian" required>
+              <option value="mother">Mother</option>
+              <option value="father">Father</option>
+              <option value="other">Other</option>
+            </select>
+            <span class="validation-msg" id="msg-guardian"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Academic Information -->
+      <section class="form-card">
+        <div class="card-header">
+          <span class="step-num">4</span>
+          <div>
+            <h2>Academic Routine & History</h2>
+            <p class="section-desc">Travel duration, study commitment, and past subject failures</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="traveltime">Travel Time <span class="req">*</span></label>
+            <select id="traveltime" name="traveltime" required>
+              <option value="1">1 - &lt; 15 min</option>
+              <option value="2">2 - 15 to 30 min</option>
+              <option value="3">3 - 30 min to 1 hour</option>
+              <option value="4">4 - &gt; 1 hour</option>
+            </select>
+            <span class="validation-msg" id="msg-traveltime"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="studytime">Weekly Study Time <span class="req">*</span></label>
+            <select id="studytime" name="studytime" required>
+              <option value="1">1 - &lt; 2 hours</option>
+              <option value="2" selected>2 - 2 to 5 hours</option>
+              <option value="3">3 - 5 to 10 hours</option>
+              <option value="4">4 - &gt; 10 hours</option>
+            </select>
+            <span class="validation-msg" id="msg-studytime"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="failures">Past Class Failures <span class="req">*</span></label>
+            <select id="failures" name="failures" required>
+              <option value="0" selected>0 failures</option>
+              <option value="1">1 failure</option>
+              <option value="2">2 failures</option>
+              <option value="3">3 failures</option>
+              <option value="4">4 or more (4)</option>
+            </select>
+            <span class="validation-msg" id="msg-failures"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Support and Activities -->
+      <section class="form-card">
+        <div class="card-header">
+          <span class="step-num">5</span>
+          <div>
+            <h2>Educational Support & Activities</h2>
+            <p class="section-desc">Supplementary tutoring, extra-curriculars, and future academic aspirations</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="schoolsup">Extra Educational Support (schoolsup) <span class="req">*</span></label>
+            <select id="schoolsup" name="schoolsup" required>
+              <option value="no" selected>No</option>
+              <option value="yes">Yes</option>
+            </select>
+            <span class="validation-msg" id="msg-schoolsup"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="famsup">Family Educational Support (famsup) <span class="req">*</span></label>
+            <select id="famsup" name="famsup" required>
+              <option value="yes" selected>Yes</option>
+              <option value="no">No</option>
+            </select>
+            <span class="validation-msg" id="msg-famsup"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="paid">Extra Paid Classes (paid) <span class="req">*</span></label>
+            <select id="paid" name="paid" required>
+              <option value="no" selected>No</option>
+              <option value="yes">Yes</option>
+            </select>
+            <span class="validation-msg" id="msg-paid"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="activities">Extra-Curricular Activities <span class="req">*</span></label>
+            <select id="activities" name="activities" required>
+              <option value="yes" selected>Yes</option>
+              <option value="no">No</option>
+            </select>
+            <span class="validation-msg" id="msg-activities"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="nursery">Attended Nursery School <span class="req">*</span></label>
+            <select id="nursery" name="nursery" required>
+              <option value="yes" selected>Yes</option>
+              <option value="no">No</option>
+            </select>
+            <span class="validation-msg" id="msg-nursery"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="higher">Wants Higher Education <span class="req">*</span></label>
+            <select id="higher" name="higher" required>
+              <option value="yes" selected>Yes</option>
+              <option value="no">No</option>
+            </select>
+            <span class="validation-msg" id="msg-higher"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Social Information -->
+      <section class="form-card">
+        <div class="card-header">
+          <span class="step-num">6</span>
+          <div>
+            <h2>Social & Personal Life</h2>
+            <p class="section-desc">Connectivity, relationships, and leisure time habits</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="internet">Internet Access at Home <span class="req">*</span></label>
+            <select id="internet" name="internet" required>
+              <option value="yes" selected>Yes</option>
+              <option value="no">No</option>
+            </select>
+            <span class="validation-msg" id="msg-internet"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="romantic">In a Romantic Relationship <span class="req">*</span></label>
+            <select id="romantic" name="romantic" required>
+              <option value="no" selected>No</option>
+              <option value="yes">Yes</option>
+            </select>
+            <span class="validation-msg" id="msg-romantic"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="famrel">Family Relationship Quality <span class="req">*</span></label>
+            <select id="famrel" name="famrel" required>
+              <option value="1">1 - Very bad</option>
+              <option value="2">2 - Bad</option>
+              <option value="3">3 - Neutral</option>
+              <option value="4" selected>4 - Good</option>
+              <option value="5">5 - Excellent</option>
+            </select>
+            <span class="validation-msg" id="msg-famrel"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="freetime">Free Time After School <span class="req">*</span></label>
+            <select id="freetime" name="freetime" required>
+              <option value="1">1 - Very low</option>
+              <option value="2">2 - Low</option>
+              <option value="3" selected>3 - Medium</option>
+              <option value="4">4 - High</option>
+              <option value="5">5 - Very high</option>
+            </select>
+            <span class="validation-msg" id="msg-freetime"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="goout">Going Out with Friends <span class="req">*</span></label>
+            <select id="goout" name="goout" required>
+              <option value="1">1 - Very low</option>
+              <option value="2">2 - Low</option>
+              <option value="3" selected>3 - Medium</option>
+              <option value="4">4 - High</option>
+              <option value="5">5 - Very high</option>
+            </select>
+            <span class="validation-msg" id="msg-goout"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Health & Attendance -->
+      <section class="form-card">
+        <div class="card-header">
+          <span class="step-num">7</span>
+          <div>
+            <h2>Health, Lifestyle & Attendance</h2>
+            <p class="section-desc">Alcohol consumption, overall health status, and absence records</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="Dalc">Workday Alcohol Consumption <span class="req">*</span></label>
+            <select id="Dalc" name="Dalc" required>
+              <option value="1" selected>1 - Very low</option>
+              <option value="2">2 - Low</option>
+              <option value="3">3 - Medium</option>
+              <option value="4">4 - High</option>
+              <option value="5">5 - Very high</option>
+            </select>
+            <span class="validation-msg" id="msg-Dalc"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="Walc">Weekend Alcohol Consumption <span class="req">*</span></label>
+            <select id="Walc" name="Walc" required>
+              <option value="1" selected>1 - Very low</option>
+              <option value="2">2 - Low</option>
+              <option value="3">3 - Medium</option>
+              <option value="4">4 - High</option>
+              <option value="5">5 - Very high</option>
+            </select>
+            <span class="validation-msg" id="msg-Walc"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="health">Current Health Status <span class="req">*</span></label>
+            <select id="health" name="health" required>
+              <option value="1">1 - Very bad</option>
+              <option value="2">2 - Bad</option>
+              <option value="3">3 - Normal</option>
+              <option value="4">4 - Good</option>
+              <option value="5" selected>5 - Very good</option>
+            </select>
+            <span class="validation-msg" id="msg-health"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="absences">Number of School Absences <span class="req">*</span></label>
+            <input type="number" id="absences" name="absences" min="0" max="93" value="4" required>
+            <span class="hint-text">Range: 0 - 93 days</span>
+            <span class="validation-msg" id="msg-absences"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Previous Grades -->
+      <section class="form-card highlight-card">
+        <div class="card-header">
+          <span class="step-num">8</span>
+          <div>
+            <h2>Previous Period Grades</h2>
+            <p class="section-desc">Key predictor grades (0 to 20 scale). Note: G3 is the ML target.</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="G1">First Period Grade (G1) <span class="req">*</span></label>
+            <input type="number" id="G1" name="G1" min="0" max="20" step="1" value="14" required>
+            <span class="hint-text">Scale: 0 to 20</span>
+            <span class="validation-msg" id="msg-G1"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="G2">Second Period Grade (G2) <span class="req">*</span></label>
+            <input type="number" id="G2" name="G2" min="0" max="20" step="1" value="15" required>
+            <span class="hint-text">Scale: 0 to 20</span>
+            <span class="validation-msg" id="msg-G2"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="submit" id="predictBtn" class="btn btn-primary">
+          <span class="btn-spinner" id="btnSpinner" aria-hidden="true"></span>
+          <span class="btn-text" id="btnText">Predict Final Grade</span>
+        </button>
+        <button type="button" id="resetBtn" class="btn btn-secondary">
+          Reset Form
+        </button>
+      </div>
+    </form>
+
+    <!-- Error Banner Area -->
+    <div id="errorContainer" class="alert-box alert-error" style="display: none;" role="alert">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-content">
+        <h4 class="alert-title">Connection Error</h4>
+        <p class="alert-message" id="errorMessage"></p>
+      </div>
+      <button type="button" class="alert-close" id="closeErrorBtn">&times;</button>
+    </div>
+
+    <!-- Prediction Result Display Section -->
+    <section id="resultSection" class="result-card" style="display: none;">
+      <div class="result-badge">Prediction Computed</div>
+      <h3 class="result-heading">Predicted Final Grade</h3>
+      
+      <div class="score-display">
+        <span class="score-number" id="predictedScore">--</span>
+        <span class="score-max">/ 20</span>
+      </div>
+
+      <div class="interpretation-box">
+        <h4 class="interp-title">Prediction Context & Summary</h4>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="summary-label">Model Applied</span>
+            <span class="summary-val" id="resSubject">Mathematics</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Period 1 Grade (G1)</span>
+            <span class="summary-val" id="resG1">--</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Period 2 Grade (G2)</span>
+            <span class="summary-val" id="resG2">--</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Absences Logged</span>
+            <span class="summary-val" id="resAbsences">--</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Weekly Study Time</span>
+            <span class="summary-val" id="resStudytime">--</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Past Failures</span>
+            <span class="summary-val" id="resFailures">--</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Clean Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>UCI Machine Learning Repository &bull; Student Performance Prediction Interface</p>
+      <p class="footer-sub">FastAPI Backend Compatible &bull; Strict Schema JSON Payload</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
